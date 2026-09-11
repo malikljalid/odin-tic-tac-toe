@@ -24,4 +24,8 @@ body {
 
 .cell {
     border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 97px;
 }
