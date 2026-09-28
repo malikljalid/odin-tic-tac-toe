@@ -16,7 +16,18 @@ function gameBoard() {
                 cells[6] !== " " && cells[7] !== " " && cells[8] !== " ");
     };
 
-    return ({setCell, getCell, show, isFull});
+    const playerMarkWon = (playerMark) => {
+        return ((getCell(0) === playerMark && getCell(1) === playerMark && getCell(2) === playerMark) ||
+                (getCell(3) === playerMark && getCell(4) === playerMark && getCell(5) === playerMark) ||
+                (getCell(6) === playerMark && getCell(7) === playerMark && getCell(8) === playerMark) ||
+                (getCell(0) === playerMark && getCell(3) === playerMark && getCell(6) === playerMark) ||
+                (getCell(1) === playerMark && getCell(4) === playerMark && getCell(7) === playerMark) ||
+                (getCell(2) === playerMark && getCell(5) === playerMark && getCell(8) === playerMark) ||
+                (getCell(0) === playerMark && getCell(4) === playerMark && getCell(8) === playerMark) ||
+                (getCell(2) === playerMark && getCell(4) === playerMark && getCell(6) === playerMark) );
+    };
+
+    return ({setCell, getCell, show, isFull, playerMarkWon});
 }
 
 function player(markChoice) {
@@ -39,27 +50,21 @@ function gameController() {
     const getTurn    = () => turn;
     const updateTurn = () => { turn === "X" ? turn = "O" : turn = "X"; };
 
-    const playerWon = (playerMark) => {
-        return ((board.getCell(0) === playerMark && board.getCell(1) === playerMark && board.getCell(2) === playerMark) ||  //condition mistake here
-                (board.getCell(3) === playerMark && board.getCell(4) === playerMark && board.getCell(5) === playerMark) ||
-                (board.getCell(6) === playerMark && board.getCell(7) === playerMark && board.getCell(8) === playerMark) ||
-                (board.getCell(0) === playerMark && board.getCell(3) === playerMark && board.getCell(6) === playerMark) ||
-                (board.getCell(1) === playerMark && board.getCell(4) === playerMark && board.getCell(7) === playerMark) ||
-                (board.getCell(2) === playerMark && board.getCell(5) === playerMark && board.getCell(8) === playerMark) ||
-                (board.getCell(0) === playerMark && board.getCell(4) === playerMark && board.getCell(8) === playerMark) ||
-                (board.getCell(2) === playerMark && board.getCell(4) === playerMark && board.getCell(6) === playerMark) );
-    };
-
     const gamePlay = () => {
         while (!board.isFull())
         {
             board.setCell(Number(prompt( turn + " : Select Position ?")), getTurn());
 
-            if (playerWon(getTurn()))
+            if (board.playerMarkWon(getTurn()))
                 break ;
 
             updateTurn();
         }
+
+        if (playerX.getMark() === getTurn())
+            playerX.increaseScore();
+        else
+            playerY.increaseScore();
     };
 
     return ({getTurn, gamePlay});
